@@ -388,6 +388,7 @@ MonoBehaviour:
   - {x: 1, y: 1}
   - {x: 2, y: 2}
   cardController: {fileID: 157319206}
+  lockInButton: {fileID: 1676663081}
 --- !u!4 &134930013
 Transform:
   m_ObjectHideFlags: 0
