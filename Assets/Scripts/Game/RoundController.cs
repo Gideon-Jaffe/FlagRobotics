@@ -51,6 +51,7 @@ public class RoundController : NetworkBehaviour
         foreach (var client in clients)
         {
             var player = client.PlayerObject.GetComponent<Player>();
+            ClearCardsClientRpc(new ClientRpcParams { Send = new ClientRpcSendParams {TargetClientIds = new ulong[]{client.ClientId}}});
             List<int> cards = cardController.GetCardIds(9);
             playerCardsInHands[player] = new PlayerCards(cards);
             
@@ -77,6 +78,11 @@ public class RoundController : NetworkBehaviour
     public void GetCardsClientRpc(string cards, ClientRpcParams rpcParams)
     {
         cardController.GetCards(StringToCardIds(cards));
+    }
+
+    [ClientRpc]
+    public void ClearCardsClientRpc(ClientRpcParams rpcParams) {
+        cardController.ClearCards();
     }
 
     public void PickCards(List<CardScript> cards)

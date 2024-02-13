@@ -7,6 +7,7 @@ public class CardController : MonoBehaviour
 {
     [SerializeField] private List<GameObject> cardTypes;
     [SerializeField] private GameObject handGrid;
+    [SerializeField] private CardSpacesGridController cardSpacesGridController;
 
     public void FillHand(int amount) {
         foreach (Transform card in handGrid.transform) 
@@ -52,5 +53,11 @@ public class CardController : MonoBehaviour
     {
         int random = Random.Range(0, 4);
         return cardTypes[random];
+    }
+
+    public void ClearCards()
+    {
+        System.Array.ForEach(handGrid.GetComponentsInChildren<CardScript>(), component => Destroy(component.gameObject));
+        cardSpacesGridController.ClearCards();
     }
 }
