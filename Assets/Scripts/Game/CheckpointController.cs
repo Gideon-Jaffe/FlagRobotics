@@ -22,7 +22,7 @@ public class CheckpointController : MonoBehaviour
         capturedCheckpoints = new Dictionary<Player, int>();
         foreach (var checkpoint in checkpoints)
         {
-            Vector3Int location = new(checkpoint.x, checkpoint.y, (int)checkpointTileMap.transform.position.z + 1);
+            Vector3Int location = new(checkpoint.x, checkpoint.y, 1);
             checkpointTileMap.SetTile(location, checkpointTile);
         }
         

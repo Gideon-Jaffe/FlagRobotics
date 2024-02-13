@@ -36,7 +36,8 @@ public class RoundController : NetworkBehaviour
             {   
                 Player player = client.PlayerObject.GetComponent<Player>();
                 player.currentPoint = startingLocations[current];
-                player.transform.position = boardTileMap.CellToWorld(Utilities.Vector2IntToVector3Int(startingLocations[current], 2));
+                player.transform.position = boardTileMap.CellToWorld(Utilities.Vector2IntToVector3Int(startingLocations[current], 0));
+                player.transform.position = player.transform.position + Vector3.forward * 2;
                 current++;
                 player.SetCharacterDirection(Utilities.Direction.Forward);
             }
