@@ -386,7 +386,7 @@ MonoBehaviour:
   actionController: {fileID: 293276919}
   startingLocations:
   - {x: 1, y: 1}
-  - {x: 2, y: 2}
+  - {x: -1, y: -1}
   cardController: {fileID: 157319206}
   lockInButton: {fileID: 1676663081}
 --- !u!4 &134930013

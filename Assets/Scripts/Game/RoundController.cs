@@ -110,6 +110,7 @@ public class RoundController : NetworkBehaviour
         if (players.TrueForAll(player => player.isLockedIn.Value))
         {
             MovePlayerServerRpc();
+            players.ForEach(player => player.isLockedIn.Value = false);
         }
     }
 

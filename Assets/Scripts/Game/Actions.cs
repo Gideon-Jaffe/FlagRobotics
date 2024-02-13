@@ -389,7 +389,8 @@ public class SubmitPlayerActions : IAction
         {
             if (item.IsAlive)
             {
-                int currentCard = _playerCards[item].ChosenCards[_currentCardPlace];
+                PlayerCards playerCards = _playerCards[item];
+                int currentCard = playerCards.ChosenCards[_currentCardPlace];
                 CreateActionFromCardId(currentCard, item);
             }
         }
