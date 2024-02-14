@@ -15,6 +15,8 @@ public class ControllersLibrary : MonoBehaviour
 
     [SerializeField] private CardController cardController;
 
+    [SerializeField] private RoundController roundController;
+
     public Tilemap GetBoardTileMap()
     {
         return boardTileMap;
@@ -38,5 +40,10 @@ public class ControllersLibrary : MonoBehaviour
     public CardController GetCardController()
     {
         return cardController;
+    }
+
+    public RoundController GetRoundController()
+    {
+        return roundController;
     }
 }

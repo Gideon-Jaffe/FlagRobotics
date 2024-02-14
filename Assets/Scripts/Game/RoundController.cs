@@ -44,6 +44,10 @@ public class RoundController : NetworkBehaviour
         }
     }
 
+    public Dictionary<Player, PlayerCards> GetPlayerCards() {
+        return playerCardsInHands;
+    }
+
     public void StartRound()
     {
         playerCardsInHands = new();
@@ -54,9 +58,14 @@ public class RoundController : NetworkBehaviour
             ClearCardsClientRpc(new ClientRpcParams { Send = new ClientRpcSendParams {TargetClientIds = new ulong[]{client.ClientId}}});
             List<int> cards = cardController.GetCardIds(9);
             playerCardsInHands[player] = new PlayerCards(cards);
+            player.isLockedIn.Value = false;
             
             GetCardsClientRpc(CardIdsToString(cards), new ClientRpcParams { Send = new ClientRpcSendParams {TargetClientIds = new ulong[]{client.ClientId}}});
         }
+
+        actionController.AddAction(
+            new WaitForPlayersLocked(
+                clients.Select(client => client.PlayerObject.GetComponent<Player>()).ToList()));
     }
 
     private string CardIdsToString(List<int> ints)
@@ -112,13 +121,6 @@ public class RoundController : NetworkBehaviour
     {
         NetworkObject playerObject = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
         playerObject.GetComponent<Player>().isLockedIn.Value = !playerObject.GetComponent<Player>().isLockedIn.Value;
-
-        List<Player> players = NetworkManager.Singleton.ConnectedClientsList.Select(networkClient => networkClient.PlayerObject.GetComponent<Player>()).ToList();
-        if (players.TrueForAll(player => player.isLockedIn.Value))
-        {
-            MovePlayerServerRpc();
-            players.ForEach(player => player.isLockedIn.Value = false);
-        }
     }
 
     [ServerRpc(RequireOwnership = false)]
