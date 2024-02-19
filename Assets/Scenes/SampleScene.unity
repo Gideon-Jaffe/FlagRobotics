@@ -2137,6 +2137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1953543277}
   - component: {fileID: 1953543276}
+  - component: {fileID: 1953543278}
   m_Layer: 0
   m_Name: ControllersLibrary
   m_TagString: Untagged
@@ -2162,6 +2163,7 @@ MonoBehaviour:
   conveyorController: {fileID: 520426944}
   cardController: {fileID: 157319206}
   roundController: {fileID: 134930012}
+  mapController: {fileID: 1953543278}
 --- !u!4 &1953543277
 Transform:
   m_ObjectHideFlags: 0
@@ -2177,6 +2179,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1953543278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953543275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae7abe17266900346ae781e65d853470, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilemap: {fileID: 2008307190}
+  leftBorder: {fileID: 11400000, guid: 3f94cc559b2279348b24029135efbfe9, type: 2}
+  rightBorder: {fileID: 11400000, guid: 5e0aba6ef1bbce6489f4b582c36a68b3, type: 2}
+  forwardBorder: {fileID: 11400000, guid: ca69c5044a00c614c8125432b9db7086, type: 2}
+  backwardsBorder: {fileID: 11400000, guid: 9e457a9839376c84597084d6adfce813, type: 2}
+  borderZHeight: 1
 --- !u!1 &2008307187
 GameObject:
   m_ObjectHideFlags: 0

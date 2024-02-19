@@ -21,6 +21,8 @@ public class GenericMoveAction : IAction
 
     private IAction _subAction;
 
+    private bool _canMove = true;
+
     public GenericMoveAction(Player player ,int amount, Utilities.Direction direction, List<Player> players) {
         _player = player;
         _amount = amount;
@@ -32,15 +34,36 @@ public class GenericMoveAction : IAction
     {
         if (!_movementAdded) {
             Debug.Log("Player is facing: " + _player.characterFacing.Value.ToString());
-            CreateSubAction();
-            _player.AddToCurrentPoint(_direction.DirectionVector());
+            if (controllers.GetMapController().CanMove(_player.GetCurrentPoint(), _direction))
+            {
+                CreateSubAction();
+                _player.AddToCurrentPoint(_direction.DirectionVector());
+            } else {
+                Debug.Log("Cant Move");
+                _canMove = false;
+                _subAction = new TrueAction();
+            }
+            
             _movementAdded = true;
+        }
+
+        if (_canMove && !CanSubMove()) {
+            _player.AddToCurrentPoint(-_direction.DirectionVector());
+            _canMove = false;
         }
         
         var moveSpace = controllers.GetBoardTileMap().CellToWorld(Utilities.Vector2IntToVector3Int(_player.GetCurrentPoint(), 0));
         moveSpace.z = _player.transform.position.z;
         _player.transform.position = Vector3.MoveTowards(_player.transform.position, moveSpace, StaticVariables.SPEED * Time.deltaTime);
         return _subAction.Execute(deltaTime, controllers) && _player.transform.position == moveSpace;
+    }
+
+    private bool CanSubMove() {
+        if (_subAction is GenericMoveAction action) {
+            return action._canMove;
+        }
+
+        return true;
     }
 
     private void CreateSubAction()
