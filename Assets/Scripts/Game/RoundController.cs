@@ -116,7 +116,7 @@ public class RoundController : NetworkBehaviour
         LockInServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void LockInServerRpc(ulong clientId)
     {
         NetworkObject playerObject = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
