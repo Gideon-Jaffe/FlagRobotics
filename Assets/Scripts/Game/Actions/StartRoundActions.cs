@@ -12,7 +12,7 @@ public class WaitForPlayersLocked : IAction
 
     public WaitForPlayersLocked(List<Player> players) {
         _players = players;
-        _postActions = new();
+        _postActions = new(); 
     }
 
     public bool Execute(float deltaTime, ControllersLibrary controllers)
