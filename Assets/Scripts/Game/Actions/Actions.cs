@@ -373,28 +373,31 @@ public class FireAllLasersAction : IAction
 {
     private List<Player> _players;
 
-    private List<IAction> _subActions = new();
+    private List<IAction> _subActions;
 
     public FireAllLasersAction(List<Player> players)
     {
         _players = players.Where(player => player.IsAlive).ToList();
-        foreach (var player in _players)
-        {
-            _subActions.Add(new FirePlayerLaserAction(player));
-        }
     }
 
     public bool Execute(float deltaTime, ControllersLibrary controllers)
     {
-        bool canContinue = true;
-        foreach (var action in _subActions)
+        if (_subActions == null)
         {
-            if (!action.Execute(deltaTime, controllers))
+            _subActions = new();
+            foreach (var player in _players)
             {
-                canContinue = false;
+                _subActions.Add(new FirePlayerLaserAction(player, _players));
             }
         }
-        return canContinue;
+        for (int i = _subActions.Count - 1; i >= 0; i--)
+        {
+            if (_subActions[i].Execute(deltaTime, controllers))
+            {
+                _subActions.RemoveAt(i);
+            }
+        }
+        return _subActions.Count == 0;
     }
 
     public List<IAction> PostActions()
@@ -407,11 +410,16 @@ public class FirePlayerLaserAction : IAction
 {
     private Player _firingPlayer;
 
+    private List<Player> _players;
+
     private GameObject _laserObject;
 
-    public FirePlayerLaserAction(Player player)
+    private Vector3 _endPoint;
+
+    public FirePlayerLaserAction(Player firingPlayer, List<Player> players)
     {
-        _firingPlayer = player;
+        _firingPlayer = firingPlayer;
+        _players = players;
     }
 
     public bool Execute(float deltaTime, ControllersLibrary controllers)
@@ -419,8 +427,39 @@ public class FirePlayerLaserAction : IAction
         if (_laserObject == null)
         {
             _laserObject = GameObject.Instantiate(controllers.GetPrefabLibrary().GetLaserPrefab(), _firingPlayer.gameObject.transform);
+            _endPoint = CalculateLaserEndPoint(
+                _firingPlayer.GetCurrentPoint(),
+                _firingPlayer.characterFacing.Value,
+                controllers.GetMapController(),
+                controllers.GetBoardTileMap(),
+                _players);
         }
-        return true;
+        _laserObject.transform.position = Vector3.MoveTowards(_laserObject.transform.position, _endPoint, StaticVariables.SPEED * Time.deltaTime);
+        if (_laserObject.transform.position == _endPoint)
+        {
+            GameObject.Destroy(_laserObject);
+            return true;
+        }
+        return false;
+    }
+
+    private Vector3 CalculateLaserEndPoint(
+        Vector2Int startingLocation, Utilities.Direction direction, MapController mapController, Tilemap tilemap, List<Player> players)
+    {
+        Vector2Int currentPoint = startingLocation;
+        int amount = 0;
+        while (amount < 40)
+        {
+            if (!mapController.CanMove(currentPoint, direction) || (amount > 0 && players.Any(player => player.currentPoint == currentPoint)))
+            {
+                break;
+            }
+            currentPoint += direction.DirectionVector();
+            amount++;
+        }
+        Vector3 returnValue = tilemap.CellToWorld(Utilities.Vector2IntToVector3Int(currentPoint, 0));
+        returnValue.z = _firingPlayer.transform.position.z;
+        return returnValue;
     }
 
     public List<IAction> PostActions()
