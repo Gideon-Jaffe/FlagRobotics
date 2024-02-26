@@ -5,6 +5,7 @@ using UnityEngine;
 public class ActionController : MonoBehaviour
 {
     private LinkedList<IAction> actions;
+    private IAction lastAction;
 
     [SerializeField] private ControllersLibrary controllersLibrary;
 
@@ -23,7 +24,11 @@ public class ActionController : MonoBehaviour
     {
         IAction currentAction = GetFirstElement();
         if (currentAction != null) {
-            Debug.Log("Executing Action: " + currentAction.GetType().Name);
+            if (lastAction != currentAction)
+            {
+                Debug.Log("Executing Action: " + currentAction.GetType().Name);
+                lastAction = currentAction;
+            }
             if (currentAction.Execute(Time.deltaTime, controllersLibrary)) {
                 actions.RemoveFirst();
                 List<IAction> postActions = currentAction.PostActions();
