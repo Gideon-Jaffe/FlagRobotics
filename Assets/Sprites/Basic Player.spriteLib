@@ -37,8 +37,13 @@ MonoBehaviour:
       m_Sprite: {fileID: -726614805, guid: bdec57f738cf75544a9b9ef212a6b5bc, type: 3}
       m_FromMain: 0
       m_SpriteOverride: {fileID: -726614805, guid: bdec57f738cf75544a9b9ef212a6b5bc, type: 3}
+    - m_Name: Laser
+      m_Hash: 680365000
+      m_Sprite: {fileID: 21300000, guid: 2c9c0af4cc7ce2e42916ec72015ffa37, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: 2c9c0af4cc7ce2e42916ec72015ffa37, type: 3}
     m_FromMain: 0
-    m_EntryOverrideCount: 4
+    m_EntryOverrideCount: 5
   m_PrimaryLibraryGUID: 
-  m_ModificationHash: 638342077301612732
+  m_ModificationHash: 638445458930110616
   m_Version: 1

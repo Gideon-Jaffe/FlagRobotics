@@ -19,6 +19,8 @@ public class ControllersLibrary : MonoBehaviour
 
     [SerializeField] private MapController mapController;
 
+    [SerializeField] private PrefabLibrary prefabLibrary;
+
     public Tilemap GetBoardTileMap()
     {
         return boardTileMap;
@@ -52,5 +54,10 @@ public class ControllersLibrary : MonoBehaviour
     public MapController GetMapController()
     {
         return mapController;
+    }
+
+    public PrefabLibrary GetPrefabLibrary()
+    {
+        return prefabLibrary;
     }
 }

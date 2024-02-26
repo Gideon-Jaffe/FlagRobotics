@@ -64,6 +64,8 @@ public class SubmitPlayerActions : IAction
         }
         _postActions.Add(new ConveyorAction(_players));
         _postActions.Add(new CheckEndGameAction(_players));
+        _postActions.Add(new FireAllLasersAction(_players));
+        _postActions.Add(new CheckEndGameAction(_players));
         _postActions.Add(new CaptureCheckpointsAction(_players));
 
         _currentCardPlace++;

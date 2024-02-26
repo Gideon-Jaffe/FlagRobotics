@@ -40,9 +40,14 @@ public class Player : NetworkBehaviour
         GetComponent<SpriteRenderer>().sprite = CharacterSprites.GetSprite(newValue.ToString(), characterFacing.Value.ToString());
     }
 
-    public void SetCharacterSprites(String spriteList)
+    public void SetCharacterSprites(string spriteList)
     {
         characterSprite.Value = spriteList;
+    }
+
+    public Sprite GetPlayerLaserSprite()
+    {
+        return CharacterSprites.GetSprite(characterSprite.Value.ToString(), "Laser");
     }
 
     public void TurnRight()

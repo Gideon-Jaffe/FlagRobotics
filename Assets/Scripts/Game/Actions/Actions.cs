@@ -368,3 +368,63 @@ public class TrueAction : IAction
         return new();
     }
 }
+
+public class FireAllLasersAction : IAction
+{
+    private List<Player> _players;
+
+    private List<IAction> _subActions = new();
+
+    public FireAllLasersAction(List<Player> players)
+    {
+        _players = players.Where(player => player.IsAlive).ToList();
+        foreach (var player in _players)
+        {
+            _subActions.Add(new FirePlayerLaserAction(player));
+        }
+    }
+
+    public bool Execute(float deltaTime, ControllersLibrary controllers)
+    {
+        bool canContinue = true;
+        foreach (var action in _subActions)
+        {
+            if (!action.Execute(deltaTime, controllers))
+            {
+                canContinue = false;
+            }
+        }
+        return canContinue;
+    }
+
+    public List<IAction> PostActions()
+    {
+        return new();
+    }
+}
+
+public class FirePlayerLaserAction : IAction
+{
+    private Player _firingPlayer;
+
+    private GameObject _laserObject;
+
+    public FirePlayerLaserAction(Player player)
+    {
+        _firingPlayer = player;
+    }
+
+    public bool Execute(float deltaTime, ControllersLibrary controllers)
+    {
+        if (_laserObject == null)
+        {
+            _laserObject = GameObject.Instantiate(controllers.GetPrefabLibrary().GetLaserPrefab(), _firingPlayer.gameObject.transform);
+        }
+        return true;
+    }
+
+    public List<IAction> PostActions()
+    {
+        return new();
+    }
+}
