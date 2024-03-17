@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,19 +7,6 @@ public class CardController : MonoBehaviour
     [SerializeField] private List<GameObject> cardTypes;
     [SerializeField] private GameObject handGrid;
     [SerializeField] private CardSpacesGridController cardSpacesGridController;
-
-    public void FillHand(int amount) {
-        foreach (Transform card in handGrid.transform) 
-        {
-            Destroy(card.gameObject);
-        }
-
-        List<GameObject> cards = GetCards(amount);
-        foreach (GameObject card in cards) {
-            GameObject cardObject = Instantiate(card, Vector3.zero, Quaternion.identity);
-            cardObject.transform.SetParent(handGrid.transform);
-        }
-    }
 
     public void GetCards(List<int> cardIds)
     {
