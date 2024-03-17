@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -413,10 +414,13 @@ public class FirePlayerLaserAction : IAction
 
     private Vector3 _endPoint;
 
+    private List<IAction> _postActions;
+
     public FirePlayerLaserAction(Player firingPlayer, List<Player> players)
     {
         _firingPlayer = firingPlayer;
         _players = players;
+        _postActions = new();
     }
 
     public bool Execute(float deltaTime, ControllersLibrary controllers)
@@ -424,11 +428,8 @@ public class FirePlayerLaserAction : IAction
         if (_laserObject == null)
         {
             _endPoint = CalculateLaserEndPoint(
-                _firingPlayer.GetCurrentPoint(),
-                _firingPlayer.characterFacing.Value,
                 controllers.GetMapController(),
-                controllers.GetBoardTileMap(),
-                _players);
+                controllers.GetBoardTileMap());
             _laserObject = GameObject.Instantiate(
                 controllers.GetPrefabLibrary().GetLaserPrefab(),
                 _firingPlayer.gameObject.transform);
@@ -444,22 +445,53 @@ public class FirePlayerLaserAction : IAction
     }
 
     private Vector3 CalculateLaserEndPoint(
-        Vector2Int startingLocation, Utilities.Direction direction, MapController mapController, Tilemap tilemap, List<Player> players)
+        MapController mapController, Tilemap tilemap)
     {
-        Vector2Int currentPoint = startingLocation;
+        Vector2Int currentPoint = _firingPlayer.GetCurrentPoint();
+        Utilities.Direction direction = _firingPlayer.characterFacing.Value;
         int amount = 0;
-        while (amount < 40)
+        while (amount < 30)
         {
-            if (!mapController.CanMove(currentPoint, direction) || (amount > 0 && players.Any(player => player.currentPoint == currentPoint)))
+            if (!mapController.CanMove(currentPoint, direction) || (amount > 0 && _players.Any(player => player.currentPoint == currentPoint)))
             {
                 break;
             }
             currentPoint += direction.DirectionVector();
             amount++;
         }
+
+        if (_players.Any(player => player.currentPoint == currentPoint))
+        {
+            Player damagedPlayer = _players.Where(player => player.currentPoint == currentPoint).First();
+            _postActions.Add(new DamagePlayerAction(damagedPlayer, 1));
+        }
+
         Vector3 returnValue = tilemap.CellToWorld(Utilities.Vector2IntToVector3Int(currentPoint, 0));
         returnValue.z = _firingPlayer.transform.position.z;
         return returnValue;
+    }
+
+    public List<IAction> PostActions()
+    {
+        return _postActions;
+    }
+}
+
+public class DamagePlayerAction : IAction
+{
+    private Player _damagedPlayer;
+
+    private int _amount;
+
+    public DamagePlayerAction(Player playerDamaged, int amount)
+    {
+        _damagedPlayer = playerDamaged;
+        _amount = amount;
+    }
+    public bool Execute(float deltaTime, ControllersLibrary controllers)
+    {
+        _damagedPlayer.HealOrDamage(_amount);
+        return true;
     }
 
     public List<IAction> PostActions()

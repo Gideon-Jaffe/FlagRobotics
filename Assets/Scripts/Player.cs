@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.U2D.Animation;
@@ -18,6 +19,8 @@ public class Player : NetworkBehaviour
     public NetworkVariable<Utilities.Direction> characterFacing = new(Utilities.Direction.Forward);
 
     public NetworkVariable<FixedString32Bytes> characterSprite = new();
+
+    private int health = 9;
 
     public bool IsAlive {get; set;} = true;
 
@@ -91,6 +94,15 @@ public class Player : NetworkBehaviour
     {
         username.Value = playerSerializable.username;
         isLockedIn.Value = playerSerializable.isLockedIn;
+    }
+
+    public void HealOrDamage(int amount)
+    {
+        health += Math.Max(amount, 9);
+        if (health <= 0)
+        {
+            IsAlive = false;
+        }
     }
 }
 
