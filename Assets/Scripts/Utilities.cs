@@ -48,4 +48,16 @@ public static class Utilities
             _ => throw new System.NotImplementedException(),
         };
     }
+
+    public static Vector3 LaserDirection(this Direction direction)
+    {
+        return direction switch
+        {
+            Direction.Forward => new Vector3(0, 0, 66.66f),
+            Direction.Right => new Vector3(0, 0, 118f),
+            Direction.Back => new Vector3(0, 0, 66.66f),
+            Direction.Left => new Vector3(0, 0, 118f),
+            _ => throw new System.NotImplementedException(),
+        };
+    }
 }

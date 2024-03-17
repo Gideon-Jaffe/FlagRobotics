@@ -426,13 +426,16 @@ public class FirePlayerLaserAction : IAction
     {
         if (_laserObject == null)
         {
-            _laserObject = GameObject.Instantiate(controllers.GetPrefabLibrary().GetLaserPrefab(), _firingPlayer.gameObject.transform);
             _endPoint = CalculateLaserEndPoint(
                 _firingPlayer.GetCurrentPoint(),
                 _firingPlayer.characterFacing.Value,
                 controllers.GetMapController(),
                 controllers.GetBoardTileMap(),
                 _players);
+            _laserObject = GameObject.Instantiate(
+                controllers.GetPrefabLibrary().GetLaserPrefab(),
+                _firingPlayer.gameObject.transform);
+            _laserObject.transform.eulerAngles = Utilities.LaserDirection(_firingPlayer.characterFacing.Value);
         }
         _laserObject.transform.position = Vector3.MoveTowards(_laserObject.transform.position, _endPoint, StaticVariables.SPEED * Time.deltaTime);
         if (_laserObject.transform.position == _endPoint)
